@@ -24,26 +24,65 @@ def main():
     screenWidth = root.winfo_screenwidth()
     screenHeight = root.winfo_screenheight()
 
-    windowWidth = screenWidth-650
+    windowWidth = screenWidth-850
     windowHeight = screenHeight-100
 
-    root.config(background="#faa5a4", width=windowWidth, height=windowHeight)
+    root.config(background="#121213")
     root.attributes("-topmost", True)
     root.update_idletasks()
 
-    print(root.winfo_geometry())
-    print(root.wm_geometry())
-    #makes it in the center of the screen!
-    root.geometry(newGeometry=(str(windowWidth) + "x" + str(windowHeight) + "+" + str(int(screenWidth/2)-int(windowWidth/2)) + "+" + str(int(screenHeight/2)-int(windowHeight/2))))
+    # makes it in the center of the screen!
+    root.geometry(newGeometry=(str(windowWidth) + "x" + str(windowHeight) + "+" + str(int(screenWidth/2)-int(windowWidth/2)) + "+" + str(int(screenHeight/2)-int(windowHeight/2)-10)))
+
+    # make the X button stop program execution
+    root.protocol('WM_DELETE_WINDOW', exit)
 
     
+
+    def detect_key_press(event):
+        if (event.char) == " ":  return
+        currentText = textBox.cget("text")
+        if len(currentText) >= 5:   return
+        currentText += event.char.upper()
+        textBox.config(text=currentText)
+
+    def backspace(event):
+        currentText = textBox.cget("text")
+        if len(currentText) == 0:   return
+        textBox.config(text=currentText[:-1])
+
+    def enter_pressed(event):
+        currentText = textBox.cget("text")
+        if len(currentText) != 5:   return
+        textBox.config(text="")
+
+
+    textBoxWidth = 8
+    textBoxHeight = 1
+    textBox = tk.Label(root, background="#f39291", foreground="White", font=("Helvetica", 60, "bold"), width=textBoxWidth, height=textBoxHeight, borderwidth=0, state="disabled")
+    textBox.grid(column=1,row=3, sticky="n")#, padx=(windowWidth/2)-(textBoxWidth/2), pady=80)
+    root.update()
+    
+    #center the thingy
+    textBox.grid(padx=(windowWidth/2)-(textBox.winfo_width()/2), pady=80)
+    textBox.config(text="")
+
+
+    #make keys binded to a function
+    root.bind_all('<Key>', detect_key_press)
+    root.bind_all('<Key-Return>', enter_pressed)
+    root.bind_all('<Key-BackSpace>', backspace)
+
+
 
     while True:
         guessedWord = input("Your guess: ").lower()
         if guessedWord.isalpha() and len(guessedWord) == 5:
             print("yay!")
+            if guessedWord in words:
+                print("valid fr")
         else:
-            break
+            print("Not valid")
     
     
 
