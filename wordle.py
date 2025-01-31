@@ -59,14 +59,25 @@ def main():
 
     textBoxWidth = 8
     textBoxHeight = 1
-    textBox = tk.Label(root, background="#f39291", foreground="White", font=("Helvetica", 60, "bold"), width=textBoxWidth, height=textBoxHeight, borderwidth=0, state="disabled")
-    textBox.grid(column=1,row=3, sticky="n")#, padx=(windowWidth/2)-(textBoxWidth/2), pady=80)
+    textBox = tk.Label(root, background="#f39291", foreground="White", font=("Helvetica", 50, "bold"), width=textBoxWidth, height=textBoxHeight, borderwidth=0, state="disabled")
+    textBox.grid(column=0,row=0, sticky="n")#, padx=(windowWidth/2)-(textBoxWidth/2), pady=80)
     root.update()
     
     #center the thingy
-    textBox.grid(padx=(windowWidth/2)-(textBox.winfo_width()/2), pady=80)
+    textBox.grid(padx=(windowWidth/2)-(textBox.winfo_width()/2), pady=20)
     textBox.config(text="")
 
+    def clone(widget):
+        parent = widget.nametowidget(widget.winfo_parent())
+        cls = widget.__class__
+
+        clone = cls(parent)
+        for key in widget.configure():
+            clone.configure({key: widget.cget(key)})
+        return clone
+    
+    newThing = clone(textBox)
+    newThing.grid(row= 1)#, pady=300)
 
     #make keys binded to a function
     root.bind_all('<Key>', detect_key_press)
